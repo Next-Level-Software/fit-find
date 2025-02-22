@@ -1,0 +1,45 @@
+[
+    {
+        "keyName": "Phone",
+        "keyValue": "+965 9759 987",
+        "keyText": "Phone number for company",
+        "keyType": "all"
+    },
+    {
+        "keyName": "email",
+        "keyValue": "info@fitfind.com",
+        "keyText": null,
+        "keyType": "all"
+    },
+    {
+        "keyName": "companyName",
+        "keyValue": "fitfind",
+        "keyText": null,
+        "keyType": "all"
+    },
+    {
+        "keyName": "companyWeb",
+        "keyValue": "https://www.myfitfind.com",
+        "keyText": null,
+        "keyType": "all"
+    },
+    {
+        "keyName": "companyAPI",
+        "keyValue": "https://api.fitfind.com",
+        "keyText": null,
+        "keyType": "all"
+    },
+    {
+        "keyName": "notificationEmail",
+        "keyValue": "info@fitfind.com",
+        "keyText": null,
+        "keyType": "all"
+    },
+    {
+        "keyName": "notificationsStatus",
+        "keyValue": "1",
+        "keyText": null,
+        "keyType": "all"
+    }
+
+]
