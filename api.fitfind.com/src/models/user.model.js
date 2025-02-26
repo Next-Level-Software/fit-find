@@ -14,6 +14,7 @@ const userSchema = new Schema(
         language: { type: String, enum: ['en', 'es', 'fr', 'de', 'zh'] },
         loginType: { type: String, enum: ['phone', 'google', 'apple'] },
         dateOfBirth: { type: Date },
+        isVerified: { type: Boolean, default: false },
         purchasedClasses: [{ type: Schema.Types.Mixed }]
     },
     { timestamps: true }

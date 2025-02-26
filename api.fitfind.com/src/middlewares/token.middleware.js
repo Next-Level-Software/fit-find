@@ -13,12 +13,13 @@ const allowedUrls = [
     "/ap/admin/update-password",
     "/ap/admin/send-reset-code",
 
-
+    // Mobile App URLs
+    "/ma/user/register",
 
 ];
 
 const allowedUrlWithParams = [
- 
+
 ];
 
 

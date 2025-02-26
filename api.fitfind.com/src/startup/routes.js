@@ -1,4 +1,5 @@
 import adminPanelRoute from '../routes/ap/index.js';
+import mobileAppRoute from '../routes/ma/index.js';
 import fileRoute from '../routes/file.js';
 
 var healthHTML = process.env.MODE == 'development' ? `
@@ -99,7 +100,7 @@ var healthHTML = process.env.MODE == 'development' ? `
 
 <body>
     <div class="container">
-        <h1>fitfind Dev Server is Online</h1>
+        <h1>FitFind Dev Server is Online</h1>
         <p>Your server is running smoothly and efficiently.</p>
         <div class="status">Status: <span>Operational</span></div>
         <div class="footer">Powered by <a href="https://www.thenextlevelsoftware.com" target="_blank">Next Level Software</a></div>
@@ -115,7 +116,7 @@ var healthHTML = process.env.MODE == 'development' ? `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>fitfind Server Health Check</title>
+    <title>FitFind Server Health Check</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -206,7 +207,7 @@ var healthHTML = process.env.MODE == 'development' ? `
 
 <body>
     <div class="container">
-        <h1>fitfind Server is Online</h1>
+        <h1>FitFind Server is Online</h1>
         <p>Your server is running smoothly and efficiently.</p>
         <div class="status">Status: <span>Operational</span></div>
         <div class="footer">Powered by <a href="https://www.thenextlevelsoftware.com" target="_blank">Next Level Software</a></div>
@@ -219,6 +220,7 @@ var healthHTML = process.env.MODE == 'development' ? `
 
 export default function (app) {
     app.use("/ap", adminPanelRoute);
+    app.use("/ma", mobileAppRoute);
     app.use("/file", fileRoute);
 
     app.get('/', (req, res) => {
