@@ -1,8 +1,11 @@
-import adminPanelRoute from '../routes/ap/index.js';
-import mobileAppRoute from '../routes/ma/index.js';
-import fileRoute from '../routes/file.js';
+import adminPanelRoute from "../routes/ap/index.js";
+import mobileAppRoute from "../routes/ma/index.js";
+import merchantPanelRoute from "../routes/mp/index.js";
+import fileRoute from "../routes/file.js";
 
-var healthHTML = process.env.MODE == 'development' ? `
+var healthHTML =
+  process.env.MODE == "development"
+    ? `
     <!DOCTYPE html>
 <html lang="en">
 
@@ -109,7 +112,8 @@ var healthHTML = process.env.MODE == 'development' ? `
 
 </html>
 
-`: `
+`
+    : `
     <!DOCTYPE html>
 <html lang="en">
 
@@ -219,12 +223,12 @@ var healthHTML = process.env.MODE == 'development' ? `
 `;
 
 export default function (app) {
-    app.use("/ap", adminPanelRoute);
-    app.use("/ma", mobileAppRoute);
-    app.use("/file", fileRoute);
+  app.use("/ap", adminPanelRoute);
+  app.use("/ma", mobileAppRoute);
+  app.use("/mp", merchantPanelRoute);
+  app.use("/file", fileRoute);
 
-    app.get('/', (req, res) => {
-        res.send(healthHTML);
-    });
-
+  app.get("/", (req, res) => {
+    res.send(healthHTML);
+  });
 }

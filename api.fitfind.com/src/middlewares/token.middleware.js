@@ -5,42 +5,37 @@ const tokenSecret = process.env.TOKEN_SECRET_KEY;
 
 // Allowed URL arrays
 const allowedUrls = [
-    "/ap/admin/create",
-    // Admin Panel URLs
-    "/ap/admin/login",
-    "/ap/admin/forgot-password",
-    "/ap/admin/verify",
-    "/ap/admin/update-password",
-    "/ap/admin/send-reset-code",
+  "/ap/admin/create",
+  // Admin Panel URLs
+  "/ap/admin/login",
+  "/ap/admin/forgot-password",
+  "/ap/admin/verify",
+  "/ap/admin/update-password",
+  "/ap/admin/send-reset-code",
 
-    // Mobile App URLs
-    "/ma/user/register",
+  // Mobile App URLs
+  "/ma/user/register",
 
+  // Merchant
+  "/mp/merchant/register",
+  "/mp/merchant/login",
 ];
 
-const allowedUrlWithParams = [
+const allowedUrlWithParams = [];
 
-];
+const allowedOrNotUrls = ["/"];
 
-
-const allowedOrNotUrls = [
-    "/",
-
-];
-
-const allowedOrNotUrlWithParams = [
-
-];
+const allowedOrNotUrlWithParams = [];
 
 var allowedOrNotUrlsWithParamsChecker = function (req, res, next) {
-    let result = null;
-    allowedOrNotUrlWithParams.forEach(element => {
-        if (element == req.url.slice(0, element.length)) {
-            result = true;
-        }
-    });
-    return result;
-}
+  let result = null;
+  allowedOrNotUrlWithParams.forEach((element) => {
+    if (element == req.url.slice(0, element.length)) {
+      result = true;
+    }
+  });
+  return result;
+};
 
 /**
  * Check if the URL matches allowed patterns with parameters.
@@ -48,7 +43,7 @@ var allowedOrNotUrlsWithParamsChecker = function (req, res, next) {
  * @returns {boolean}
  */
 const allowedUrlsWithParamsChecker = (req) => {
-    return allowedUrlWithParams.some((url) => req.url.startsWith(url));
+  return allowedUrlWithParams.some((url) => req.url.startsWith(url));
 };
 
 /**
@@ -58,58 +53,73 @@ const allowedUrlsWithParamsChecker = (req) => {
  * @param {Function} next - Express next middleware function.
  */
 export const tokenCheckerMiddleware = async (req, res, next) => {
-    const authHeader = req.get("Authorization");
+  const authHeader = req.get("Authorization");
 
-    // Check for authorization header
-    if (!authHeader) {
-        return res.status(401).json({ message: "Please login to connect for availing this feature." });
+  // Check for authorization header
+  if (!authHeader) {
+    return res
+      .status(401)
+      .json({ message: "Please login to connect for availing this feature." });
+  }
+
+  const token = authHeader.split(" ")[1];
+
+  // Check for token existence
+  if (!token) {
+    return res
+      .status(401)
+      .json({ message: "No user token provided with request." });
+  }
+
+  try {
+    // Verify token
+    const decodedToken = jwt.verify(token, tokenSecret);
+
+    if (!decodedToken) {
+      return res
+        .status(401)
+        .json({ message: "Invalid token provided with the request." });
     }
 
-    const token = authHeader.split(" ")[1];
+    // Fetch user or admin from the database
+    const admin = await Admin.findById(decodedToken._id);
+    const user = await User.findById(decodedToken._id);
 
-    // Check for token existence
-    if (!token) {
-        return res.status(401).json({ message: "No user token provided with request." });
+    if (!admin && !user) {
+      return res
+        .status(401)
+        .json({ message: "Unable to find user information." });
     }
 
-    try {
-        // Verify token
-        const decodedToken = jwt.verify(token, tokenSecret);
+    if (user) {
+      // Check if the user is blocked
+      if (user.isBlocked) {
+        return res.status(403).json({ message: "User has been blocked!" });
+      }
 
-        if (!decodedToken) {
-            return res.status(401).json({ message: "Invalid token provided with the request." });
-        }
-
-        // Fetch user or admin from the database
-        const admin = await Admin.findById(decodedToken._id);
-        const user = await User.findById(decodedToken._id);
-
-        if (!admin && !user) {
-            return res.status(401).json({ message: "Unable to find user information." });
-        }
-
-        if (user) {
-            // Check if the user is blocked
-            if (user.isBlocked) {
-                return res.status(403).json({ message: "User has been blocked!" });
-            }
-
-            // Check if the user has a deletion request
-            if (user.deletionRequest) {
-                return res.status(403).json({ message: "User account is pending deletion!" });
-            }
-        }
-
-        // Attach user details and role to the request object
-        req.user = admin
-            ? { ...admin.toObject(), role: admin?.isSuperAdmin ? "Super Admin" : "Admin" }
-            : { ...user.toObject(), role: user?.type || 'buyer' };
-
-        next();
-    } catch (err) {
-        console.error("Error verifying token:", err);
-        return res.status(401).json({ message: "Error reading token provided with the request." });
+      // Check if the user has a deletion request
+      if (user.deletionRequest) {
+        return res
+          .status(403)
+          .json({ message: "User account is pending deletion!" });
+      }
     }
+
+    // Attach user details and role to the request object
+    req.user = admin
+      ? {
+          ...admin.toObject(),
+          role: admin?.isSuperAdmin ? "Super Admin" : "Admin",
+        }
+      : { ...user.toObject(), role: user?.type || "buyer" };
+
+    next();
+  } catch (err) {
+    console.error("Error verifying token:", err);
+    return res
+      .status(401)
+      .json({ message: "Error reading token provided with the request." });
+  }
 };
 
 /**
@@ -119,47 +129,49 @@ export const tokenCheckerMiddleware = async (req, res, next) => {
  * @param {Function} next - Express next middleware function.
  */
 export const tokenCheckerOrNotMiddleWare = async (req, res, next) => {
-    const authHeader = req.get("Authorization");
+  const authHeader = req.get("Authorization");
 
+  // Check for authorization header
+  if (!authHeader) {
+    return next();
+  }
 
-    // Check for authorization header
-    if (!authHeader) {
-        return next();
+  const token = authHeader?.split(" ")[1];
+
+  // Check for token existence
+  if (!token) {
+    return next();
+  }
+
+  try {
+    // Verify token
+    const decodedToken = jwt.verify(token, tokenSecret);
+
+    if (!decodedToken) {
+      return next();
     }
 
-    const token = authHeader?.split(" ")[1];
+    // Fetch user or admin from the database
+    const admin = await Admin.findById(decodedToken._id);
+    const user = await User.findById(decodedToken._id);
 
-    // Check for token existence
-    if (!token) {
-        return next();
+    if (!admin && !user) {
+      return next();
     }
 
-    try {
-        // Verify token
-        const decodedToken = jwt.verify(token, tokenSecret);
-
-        if (!decodedToken) {
-            return next();
+    // Attach user details and role to the request object
+    req.user = admin
+      ? {
+          ...admin.toObject(),
+          role: admin?.isSuperAdmin ? "Super Admin" : "Admin",
         }
+      : { ...user.toObject(), role: user.type };
 
-        // Fetch user or admin from the database
-        const admin = await Admin.findById(decodedToken._id);
-        const user = await User.findById(decodedToken._id);
-
-        if (!admin && !user) {
-            return next();
-        }
-
-        // Attach user details and role to the request object
-        req.user = admin
-            ? { ...admin.toObject(), role: admin?.isSuperAdmin ? "Super Admin" : "Admin" }
-            : { ...user.toObject(), role: user.type };
-
-        next();
-    } catch (err) {
-        console.error("Error verifying token:", err);
-        return next();
-    }
+    next();
+  } catch (err) {
+    console.error("Error verifying token:", err);
+    return next();
+  }
 };
 
 /**
@@ -169,21 +181,20 @@ export const tokenCheckerOrNotMiddleWare = async (req, res, next) => {
  * @param {Function} next - Express next middleware function.
  */
 export const tokenChecker = async (req, res, next) => {
-    if (
-        req.url.startsWith("/file/") ||
-        allowedUrls.includes(req.url) ||
-        allowedUrlsWithParamsChecker(req)
-    ) {
-        return next();
-    }
-    if (
-        allowedOrNotUrls.includes(req.url)
-        || allowedOrNotUrlsWithParamsChecker(req)
-    ) {
-        await tokenCheckerOrNotMiddleWare(req, res, next);
-        return;
-    }
+  if (
+    req.url.startsWith("/file/") ||
+    allowedUrls.includes(req.url) ||
+    allowedUrlsWithParamsChecker(req)
+  ) {
+    return next();
+  }
+  if (
+    allowedOrNotUrls.includes(req.url) ||
+    allowedOrNotUrlsWithParamsChecker(req)
+  ) {
+    await tokenCheckerOrNotMiddleWare(req, res, next);
+    return;
+  }
 
-
-    await tokenCheckerMiddleware(req, res, next);
+  await tokenCheckerMiddleware(req, res, next);
 };
