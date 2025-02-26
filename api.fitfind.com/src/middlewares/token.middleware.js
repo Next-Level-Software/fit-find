@@ -19,6 +19,7 @@ const allowedUrls = [
   // Merchant
   "/mp/merchant/register",
   "/mp/merchant/login",
+  "/mp/merchant/forgot-password",
 ];
 
 const allowedUrlWithParams = [];
