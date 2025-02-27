@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { User } from '../../startup/models.js';
+import { ResetCode, User } from '../../startup/models.js';
 import { badWordsCheck, generateApiResponse, generateStartEndDateStatement, isValidEmail, randomStringGenerator } from "../../services/utilities.service.js";
 import { compareEncryptedPassword, encryptPassword } from "../../services/password.service.js";
 import { tokenCreator } from "../../services/token.service.js";
@@ -119,8 +119,16 @@ export const userController = {
             password,
         });
 
+        const code = randomStringGenerator(6, 'numeric');
+
+        await ResetCode.create({
+            code: code,
+            email: email,
+            expireAt: moment().add(5, 'minutes'),
+        });
+
         if (email)
-            await sendEmailOnRegistration(email);
+            await sendEmailOnRegistration(email, code);
 
         const token = tokenCreator(createdUser.toObject());
         return generateApiResponse(
@@ -130,6 +138,57 @@ export const userController = {
         );
 
     }),
+
+
+    async verifyAccount(req, res, next) {
+        try {
+            const { email, code } = req.body;
+
+            const findUser = await User.findOne({ email });
+
+            if (findUser.emailVerified) {
+                return generateApiResponse(
+                    res, StatusCodes.NOT_ACCEPTABLE, false,
+                    "Account already verified!",
+                );
+            }
+
+            const findResetCode = await ResetCode.findOne({ email });
+            if (!findResetCode) {
+                return generateApiResponse(
+                    res, StatusCodes.NOT_ACCEPTABLE, false,
+                    "Reset code has been expired!",
+                );
+            }
+
+            const isCodeVerified = findResetCode?.code == code;
+            if (!isCodeVerified) {
+                return generateApiResponse(
+                    res, StatusCodes.NOT_ACCEPTABLE, false,
+                    "Invalid reset code!",
+                );
+            }
+
+            findUser.emailVerified = true;
+            await findUser.save();
+
+            await ResetCode.deleteOne({ email });
+
+            const token = tokenCreator(findUser?.toObject());
+            return generateApiResponse(
+                res, StatusCodes.OK, true,
+                "Email has been verified successfully!",
+                { token }
+            );
+
+        } catch (error) {
+            return generateApiResponse(
+                res, StatusCodes.INTERNAL_SERVER_ERROR, false,
+                "Error occurred while verifying code!",
+                { error }
+            )
+        }
+    },
 
     /**
      * Login User
@@ -162,10 +221,50 @@ export const userController = {
         );
     }),
 
-    /**
- * Forgot Password
- */
+    socialLogin: asyncHandler(async (req, res, next) => {
+        // const { name, email, loginType } = req.body;
 
+        const { name, email, phone, loginType } = req.body;
+
+        const findUser = await User.findOne({ email });
+
+        if (findUser) {
+
+            if (findUser.loginType != loginType) {
+                return generateApiResponse(
+                    res, StatusCodes.CONFLICT, false,
+                    "Account already exists, try to login with " + (findUser.loginType || "email"),
+                );
+            }
+
+            const token = tokenCreator(findUser?.toObject());
+            return generateApiResponse(
+                res, StatusCodes.OK, true,
+                "User logged in successfully",
+                { token }
+            );
+        }
+
+        const user = await User.create({
+            name,
+            email,
+            phone,
+            loginType,
+            emailVerified: true,
+        });
+
+        const token = tokenCreator(user?.toObject());
+        return generateApiResponse(
+            res, StatusCodes.OK, true,
+            "User has been registered successfully!",
+            { token }
+        );
+
+    }),
+
+    /**
+     * Forgot Password
+    */
     async forgotPassword(req, res, next) {
         try {
             const {
@@ -196,8 +295,6 @@ export const userController = {
                 code,
                 expireAt,
             });
-
-
 
             return generateApiResponse(
                 res, StatusCodes.ACCEPTED, true,
@@ -301,8 +398,8 @@ export const userController = {
     */
     async updatePassword(req, res) {
         try {
+            const { _id } = req.user;
             const {
-                _id,
                 password,
             } = req.body;
 
@@ -403,8 +500,8 @@ export const userController = {
             const {
                 email,
                 name,
-                accessTabs,
-                is2FAEnabled,
+                phone,
+                gender,
             } = req.body;
 
             if (name) {
@@ -417,15 +514,20 @@ export const userController = {
                 }
             }
 
-            if (email) {
+            if (email || phone) {
                 const isEmailUsedByUser = await User.countDocuments({ _id: { $ne: _id }, email: email });
-                if (isEmailUsedByUser) {
+                const isPhoneUsedByUser = await User.countDocuments({ _id: { $ne: _id }, phone: phone });
+
+                if (isEmailUsedByUser || isPhoneUsedByUser) {
                     return generateApiResponse(
                         res, StatusCodes.CONFLICT, false,
-                        "Email already used by another account!",
+                        isEmailUsedByUser
+                            ? "Email already used by another account!"
+                            : "Phone already used by another account!",
                     );
                 }
             }
+
             const file = req.file;
             const foundUser = await User.findById(_id, 'profilePhoto');
 
@@ -438,8 +540,9 @@ export const userController = {
                 {
                     email,
                     name,
+                    phone,
+                    gender,
                     profilePhoto,
-                    accessTabs,
                 },
                 { new: true },
             );

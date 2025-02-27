@@ -15,6 +15,11 @@ const allowedUrls = [
 
   // Mobile App URLs
   "/ma/user/register",
+  "/ma/user/verify-account",
+  "/ma/user/login",
+  "/ma/user/social-login",
+  "/ma/user/forgot-password",
+  "/ma/user/verify",
 
   // Merchant user
   "/mp/merchant/register",
@@ -116,9 +121,9 @@ export const tokenCheckerMiddleware = async (req, res, next) => {
     // Attach user details and role to the request object
     req.user = admin
       ? {
-          ...admin.toObject(),
-          role: admin?.isSuperAdmin ? "Super Admin" : "Admin",
-        }
+        ...admin.toObject(),
+        role: admin?.isSuperAdmin ? "Super Admin" : "Admin",
+      }
       : { ...user.toObject(), role: user?.type || "buyer" };
 
     next();
@@ -170,9 +175,9 @@ export const tokenCheckerOrNotMiddleWare = async (req, res, next) => {
     // Attach user details and role to the request object
     req.user = admin
       ? {
-          ...admin.toObject(),
-          role: admin?.isSuperAdmin ? "Super Admin" : "Admin",
-        }
+        ...admin.toObject(),
+        role: admin?.isSuperAdmin ? "Super Admin" : "Admin",
+      }
       : { ...user.toObject(), role: user.type };
 
     next();

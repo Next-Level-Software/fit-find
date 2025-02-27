@@ -57,23 +57,23 @@ export const sendOneSignalEmail = async ({ to, subject, text, html }) => {
  * Transporter
  */
 export const transporter = nodemailer.createTransport({
-  // service: process.env.EMAIL_SERVICE,
-  // tls: {
-  //     rejectUnauthorized: false,
-  // },
-  // auth: {
-  //     user: process.env.SMTP_EMAIL,
-  //     pass: process.env.SMTP_PASSWORD,
-  // },
-  host: process.env.SMTP_HOST,
-  port: 465,
-  secure: true,
-  // port: 587,
-  // secure: false,
+  service: process.env.EMAIL_SERVICE,
+  tls: {
+    rejectUnauthorized: false,
+  },
   auth: {
     user: process.env.SMTP_EMAIL,
     pass: process.env.SMTP_PASSWORD,
   },
+  // host: process.env.SMTP_HOST,
+  // port: 465,
+  // secure: true,
+  // // port: 587,
+  // // secure: false,
+  // auth: {
+  //     user: process.env.SMTP_EMAIL,
+  //     pass: process.env.SMTP_PASSWORD,
+  // },
 });
 
 export async function sendEmailOnRegistration(email, code) {

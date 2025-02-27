@@ -1,24 +1,24 @@
 [
   {
-      "name": "User 1",
-      "username": "user123456",
-      "gender": "male",
-      "email": "user1@gmail.com",
-      "phone": "123456789",
-      "password": "$2a$12$vZwOE2IpbYD9IkJSV55JeewWYOtQrbDByrpg5TyvEiaczY4eNuGx2",
-      "dateOfBirth": "2000-12-28",
-      "enablePushNotification": false,
-      "type": "user"
+    "name": "User 1",
+    "username": "user123456",
+    "phone": "123456789",
+    "email": "user1@gmail.com",
+    "password": "$2a$12$vZwOE2IpbYD9IkJSV55JeewWYOtQrbDByrpg5TyvEiaczY4eNuGx2",
+    "language": "en",
+    "loginType": "email",
+    "dateOfBirth": "2000-12-28",
+    "emailVerified": true
   },
   {
-      "name": "User 2",
-      "username": "User123456",
-      "gender": "male",
-      "email": "User1@gmail.com",
-      "phone": "987654321",
-      "password": "$2a$12$vZwOE2IpbYD9IkJSV55JeewWYOtQrbDByrpg5TyvEiaczY4eNuGx2",
-      "dateOfBirth": "2000-01-01",
-      "enablePushNotification": false,
-      "type": "User"
+    "name": "User 2",
+    "username": "User123456",
+    "phone": "987654321",
+    "email": "user2@gmail.com",
+    "password": "$2a$12$vZwOE2IpbYD9IkJSV55JeewWYOtQrbDByrpg5TyvEiaczY4eNuGx2",
+    "language": "en",
+    "loginType": "email",
+    "dateOfBirth": "2000-01-01",
+    "emailVerified": true
   }
 ]

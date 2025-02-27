@@ -11,10 +11,12 @@ const userSchema = new Schema(
         phone: { type: String },
         email: { type: String },
         password: { type: String },
+        gender: { type: String, enum: ['male', 'female', 'child'] },
         language: { type: String, enum: ['en', 'es', 'fr', 'de', 'zh'] },
-        loginType: { type: String, enum: ['phone', 'google', 'apple'] },
+        loginType: { type: String, enum: ['email', 'google', 'apple'], default: 'email' },
         dateOfBirth: { type: Date },
-        isVerified: { type: Boolean, default: false },
+        emailVerified: { type: Boolean, default: false },
+        profilePhoto: { type: String },
         purchasedClasses: [{ type: Schema.Types.Mixed }]
     },
     { timestamps: true }
