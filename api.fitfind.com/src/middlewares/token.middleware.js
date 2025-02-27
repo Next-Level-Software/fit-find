@@ -16,13 +16,20 @@ const allowedUrls = [
   // Mobile App URLs
   "/ma/user/register",
 
-  // Merchant
+  // Merchant user
   "/mp/merchant/register",
   "/mp/merchant/login",
   "/mp/merchant/forgot-password",
+  "/mp/merchant/reset-password",
+  // Merchant subscription
+  "/mp/subscription/create",
 ];
 
-const allowedUrlWithParams = [];
+const allowedUrlWithParams = [
+  "/mp/subscription/get",
+  "/mp/subscription/update",
+  "/mp/subscription/delete",
+];
 
 const allowedOrNotUrls = ["/"];
 
