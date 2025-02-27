@@ -7,9 +7,11 @@ import { paginationFiltrationData } from "../../services/pagination.service.js";
 export const productController = {
     getProductsByFilter: asyncHandler(async (req, res) => {
 
-        const { brand, category } = req.query;
+        const { brand, category, minPrice, maxPrice, rating } = req.query;
 
-        let whereStatement = {};
+        let whereStatement = {
+            status: 'active',
+        };
 
         if (brand) {
             Object.assign(whereStatement, { brand });
@@ -17,6 +19,14 @@ export const productController = {
 
         if (category) {
             Object.assign(whereStatement, { category });
+        }
+
+        if (minPrice && maxPrice) {
+            Object.assign(whereStatement, { finalPrice: { $gte: parseFloat(minPrice), $lte: parseFloat(maxPrice) } });
+        }
+
+        if (rating) {
+            Object.assign(whereStatement, { rating: { $gte: parseFloat(rating) } });
         }
 
         const searchAttributes = [
@@ -34,6 +44,26 @@ export const productController = {
             res, StatusCodes.OK, true,
             "Products by filter fetched successfully!",
             { filteredData },
+        );
+    }),
+
+    getProductDetail: asyncHandler(async (req, res) => {
+        const { productId } = req.query;
+
+        const product = await Product.findById(productId)
+            .populate('category')
+            .populate('brand');
+
+        if (!product) {
+            return generateApiResponse(
+                res, StatusCodes.NOT_FOUND, false,
+                "Product not found!",
+            );
+        }
+        return generateApiResponse(
+            res, StatusCodes.OK, true,
+            "Product fetched successfully!",
+            { product },
         );
     }),
 }

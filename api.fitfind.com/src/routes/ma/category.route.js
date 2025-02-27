@@ -1,15 +1,15 @@
 import express from 'express';
 import { validateApiAttributes, checkApiValidation } from '../../middlewares/validators.middleware.js';
-import { productController } from '../../controllers/ma/product.controller.js';
+import { categoryController } from '../../controllers/ma/category.controller.js';
 var router = express.Router();
 
 router.get(
-    '/get-by-filter',
-    productController.getProductsByFilter,
+    '/get-all', 
+    categoryController.getAllCategories,
 );
 router.get(
-    '/get-detail',
-    productController.getProductDetail,
+    '/get-by-filter', 
+    categoryController.getCategoriesByFilter,
 );
 
 export default router;
