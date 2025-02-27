@@ -6,6 +6,11 @@ import {
   checkApiValidation,
 } from "../../middlewares/validators.middleware.js";
 
-
+router.post(
+  "/register",
+  validateApiAttributes(["businessName", "type"]),
+  checkApiValidation,
+  merchantController.register,
+);
 
 export default router;

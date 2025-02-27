@@ -15,19 +15,11 @@ export const merchantController = {
             });
         }
 
-        const findConfig = await Config.findOne({
-            where: {
-                type: 'geo-fencing-radius',
-            },
-        });
-
+        // Fetch radius from config (default 10km if not found)
+        const findConfig = await Config.findOne({ where: { type: 'geo-fencing-radius' } });
         const searchInKm = findConfig ? parseInt(findConfig.keyValue) : 10;
 
-        const userCurrentLocation = {
-            lat: lat,
-            lng: lng,
-        };
-
+        // Base query conditions
         const whereStatement = {
             status: "approved",
             isAvailable: true,
@@ -46,60 +38,77 @@ export const merchantController = {
             ];
         }
 
+        // Fetch merchants matching the search criteria
         const merchants = await Merchant.find(whereStatement);
 
-
-        var nearbyMerchants = [];
-
-        if (merchants.length) {
-
-            merchants.forEach(async (merchant) => {
-
-                var isNearByMerchant = {
-                    lat: merchant.location.latitude,
-                    lng: merchant.location.longitude,
-                }
-
-                var dist = geodist(userCurrentLocation, isNearByMerchant, {
-                    format: true,
-                    unit: "meters",
-                });
-
-                var distanceInMeters = dist.substr(0, dist.indexOf(" "));
-                var distanceInKm = dist.substr(0, dist.indexOf(" ")) / 1000;
-
-                if (distanceInKm < searchInKm) {
-
-                    var data = {
-                        ...merchant.toObject(),
-                        distanceInMeters: distanceInMeters,
-                    };
-                    nearbyMerchants.push(data);
-                }
-
-            });
-
-            if (nearbyMerchants.length == 0) {
-
-                return generateApiResponse(
-                    res, StatusCodes.OK, false, "No nearby merchants found",
-                    { merchants: nearbyMerchants },
-                );
-            }
-
-            return generateApiResponse(
-                res, StatusCodes.OK, true, "Merchants fetched successfully",
-                { merchants: nearbyMerchants },
-            );
-
-        } else {
-
-            return generateApiResponse(
-                res, StatusCodes.OK, true, "Merchants fetched successfully",
-                { merchants: [] },
-            );
+        if (!merchants.length) {
+            return generateApiResponse(res, StatusCodes.OK, true, "No nearby merchants found", { merchants: [] });
         }
 
+        // Process merchants asynchronously
+        const nearbyMerchants = await Promise.all(
+            merchants.map(async (merchant) => {
+                let nearestLocation = null;
+                let minDistance = Infinity;
 
+                // Check gym location if available
+                if (merchant.gymLocation) {
+                    const gymDist = geodist(
+                        { lat, lng },
+                        { lat: merchant.gymLocation.latitude, lng: merchant.gymLocation.longitude },
+                        { unit: "km" }
+                    );
+
+                    if (gymDist <= searchInKm && gymDist < minDistance) {
+                        minDistance = gymDist;
+                        nearestLocation = {
+                            type: "gym",
+                            latitude: merchant.gymLocation.latitude,
+                            longitude: merchant.gymLocation.longitude,
+                            distanceInKm: gymDist,
+                        };
+                    }
+                }
+
+                // Check academy location if available
+                if (merchant.academyLocation) {
+                    const academyDist = geodist(
+                        { lat, lng },
+                        { lat: merchant.academyLocation.latitude, lng: merchant.academyLocation.longitude },
+                        { unit: "km" }
+                    );
+
+                    if (academyDist <= searchInKm && academyDist < minDistance) {
+                        minDistance = academyDist;
+                        nearestLocation = {
+                            type: "academy",
+                            latitude: merchant.academyLocation.latitude,
+                            longitude: merchant.academyLocation.longitude,
+                            distanceInKm: academyDist,
+                        };
+                    }
+                }
+
+                // If a valid nearby location was found, include merchant in response
+                if (nearestLocation) {
+                    return {
+                        ...merchant.toObject(),
+                        nearestLocation,
+                    };
+                }
+                return null;
+            })
+        );
+
+        // Filter out merchants that are null (not within search radius)
+        const filteredMerchants = nearbyMerchants.filter(Boolean);
+
+        return generateApiResponse(
+            res,
+            StatusCodes.OK,
+            true,
+            "Merchants fetched successfully",
+            { merchants: filteredMerchants }
+        );
     }),
 }

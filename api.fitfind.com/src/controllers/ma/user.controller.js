@@ -219,7 +219,6 @@ export const userController = {
             );
         }
 
-
         const token = tokenCreator(foundUser?.toObject());
 
         return generateApiResponse(

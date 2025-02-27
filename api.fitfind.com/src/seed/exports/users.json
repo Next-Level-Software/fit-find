@@ -8,6 +8,7 @@
     "language": "en",
     "loginType": "email",
     "dateOfBirth": "2000-12-28",
+    "userType": "user",
     "emailVerified": true
   },
   {
@@ -19,6 +20,7 @@
     "language": "en",
     "loginType": "email",
     "dateOfBirth": "2000-01-01",
+    "userType": "user",
     "emailVerified": true
   }
 ]
