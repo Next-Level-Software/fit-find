@@ -4,6 +4,7 @@ import Activity from "../models/activity.model.js";
 import Address from "../models/address.model.js";
 import Admin from "../models/admin.model.js";
 import Banner from "../models/banner.model.js";
+import Brand from "../models/brand.model.js";
 import Cart from "../models/cart.model.js";
 import Category from "../models/category.model.js";
 import Class from "../models/class.model.js";
@@ -37,6 +38,7 @@ export {
     Address,
     Admin,
     Banner,
+    Brand,
     Cart,
     Category,
     Class,

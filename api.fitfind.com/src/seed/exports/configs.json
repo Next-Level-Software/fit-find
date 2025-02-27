@@ -40,5 +40,11 @@
         "keyValue": "1",
         "keyText": null,
         "keyType": "all"
+    },
+    {
+        "keyName": "geo-fencing-radius",
+        "keyValue": "10",
+        "keyText": "To Find nearby gyms and academies",
+        "keyType": "all"
     }
 ]

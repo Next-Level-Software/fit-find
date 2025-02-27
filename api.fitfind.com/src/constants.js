@@ -6,6 +6,7 @@ const ModelNames = {
   Address: { model: "Address", db: "addresses" },
   Admin: { model: "Admin", db: "admins" },
   Banner: { model: "Banner", db: "banners" },
+  Brand: { model: "Brand", db: "brands" },
   Cart: { model: "Cart", db: "carts" },
   Category: { model: "Category", db: "categories" },
   Class: { model: "Class", db: "classes" },

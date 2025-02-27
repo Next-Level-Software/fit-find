@@ -9,10 +9,22 @@ const merchantSchema = new mongoose.Schema(
   {
     businessName: { type: String },
     businessNameAr: { type: String },
+
+    gymDetail: {
+      name: { type: String },
+      nameAr: { type: String },
+      description: { type: String },
+      descriptionAr: { type: String },
+    },
+
     image: { type: String },
     email: { type: String },
     phone: { type: String },
     password: { type: String },
+    location: {
+      latitude: { type: Number },
+      longitude: { type: Number },
+    },
     workingHours: [
       {
         day: { type: String },
@@ -21,12 +33,13 @@ const merchantSchema = new mongoose.Schema(
         closedAt: { type: String },
       },
     ],
-    type: { type: String, enum: ["gym", "academy"] },
+    type: [{ type: String, enum: ["gym", "academy", "marketplace"] }],
     images: [{ type: String }],
+    isAvailable: { type: Boolean, default: true },
     status: {
       type: String,
-      enum: ["approved", "declined"],
-      default: "approved",
+      enum: ["pending", "approved", "declined"],
+      default: 'pending'
     },
     declinedReason: { type: String },
     documents: [{ type: String }],
