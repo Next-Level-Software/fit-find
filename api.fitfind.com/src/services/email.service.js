@@ -133,25 +133,25 @@ export async function sendEmailOnRegistration(email, code) {
         : `Thank you for Registering with ${
             companyName?.keyValue || "fitfind"
           }`;
-    await sendOneSignalEmail({
-      to: email,
-      html: template,
-      subject: subject,
-    });
+    // await sendOneSignalEmail({
+    //   to: email,
+    //   html: template,
+    //   subject: subject,
+    // });
 
     // Prepare email data
-    // const mailData = {
-    //     from: process.env.FROM_EMAIL,
-    //     to: email,
-    //     bcc: email, // Use BCC for better privacy
-    //     subject: thisUser?.language == 'ar' ? `شكرًا لك على التسجيل في ${companyName?.keyValue || "بيزباي"}` : `Thank you for Registering with ${companyName?.keyValue || "fitfind"}`,
-    //     html: template,
-    //     replyTo: process.env.FROM_EMAIL,
-    // };
+    const mailData = {
+        from: process.env.FROM_EMAIL,
+        to: email,
+        bcc: email, // Use BCC for better privacy
+        subject: subject,
+        html: template,
+        replyTo: process.env.FROM_EMAIL,
+    };
 
-    // // Send the email
-    // const info = await transporter.sendMail(mailData);
-    // console.log("Email sent successfully:", info);
+    // Send the email
+    const info = await transporter.sendMail(mailData);
+    console.log("Email sent successfully:", info);
   } catch (error) {
     console.error("Error in sending registration email:", error);
   }
@@ -206,27 +206,27 @@ export async function sendEmailForResetCode(
           language == "ar"
             ? `${code} هو الرمز الخاص بك لاستعادة كلمة المرور`
             : `${code} is your code to rest password`;
-        await sendOneSignalEmail({
-          to: email,
-          html: template,
-          subject: subject,
-        });
+        // await sendOneSignalEmail({
+        //   to: email,
+        //   html: template,
+        //   subject: subject,
+        // });
 
         // Mail data
-        // const mailData = {
-        //     from: process.env.FROM_EMAIL,
-        //     to: email,
-        //     bcc: email, // Use bcc to hide "to" emails from recipients
-        //     subject: language == 'ar' ? `${code} هو الرمز الخاص بك لاستعادة كلمة المرور` : `${code} is your code to rest password`,
-        //     html: template,
-        //     replyTo: process.env.FROM_EMAIL,
-        // };
+        const mailData = {
+            from: process.env.FROM_EMAIL,
+            to: email,
+            bcc: email, // Use bcc to hide "to" emails from recipients
+            subject: subject,
+            html: template,
+            replyTo: process.env.FROM_EMAIL,
+        };
 
-        // // Send email
-        // const info = await transporter.sendMail(mailData);
-        // console.log(" ------ info ----- ");
-        // console.log(info);
-        // console.log(" ------ info ----- ");
+        // Send email
+        const info = await transporter.sendMail(mailData);
+        console.log(" ------ info ----- ");
+        console.log(info);
+        console.log(" ------ info ----- ");
       }
     }
   } catch (error) {
