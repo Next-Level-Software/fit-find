@@ -22,10 +22,11 @@ const allowedUrls = [
   "/ma/user/verify",
 
   // Merchant user
-  "/mp/merchant/register",
-  "/mp/merchant/login",
-  "/mp/merchant/forgot-password",
-  "/mp/merchant/reset-password",
+  "/mp/user/register",
+  "/mp/user/login",
+  "/mp/user/forgot-password",
+  "/mp/user/reset-password",
+
   // Merchant subscription
   "/mp/subscription/create",
 ];

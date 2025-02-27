@@ -17,7 +17,12 @@ const userSchema = new Schema(
         dateOfBirth: { type: Date },
         emailVerified: { type: Boolean, default: false },
         profilePhoto: { type: String },
-        purchasedClasses: [{ type: Schema.Types.Mixed }]
+        purchasedClasses: [{ type: Schema.Types.Mixed }],
+        userType: { type: String, enum: ['user', 'merchant'], default: 'user' },
+        merchant: {
+            type: Schema.Types.ObjectId,
+            ref: ModelNames.Merchant.model,
+        },
     },
     { timestamps: true }
 );
@@ -43,5 +48,10 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.isPasswordCorrect = async function (password) {
     return await compareEncryptedPassword(password, this.password);
 };
+
+userSchema.index(
+    { createdAt: 1 },
+    { expireAfterSeconds: 2592000, partialFilterExpression: { emailVerified: false } }
+);
 
 export default mongoose.model(ModelNames.User.model, userSchema);

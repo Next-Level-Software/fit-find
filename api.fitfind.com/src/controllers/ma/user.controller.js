@@ -212,6 +212,14 @@ export const userController = {
             );
         }
 
+        if (foundUser.userType !== "user") {
+            return generateApiResponse(
+                res, StatusCodes.UNAUTHORIZED, false,
+                "This account is associated with merchant!",
+            );
+        }
+
+
         const token = tokenCreator(foundUser?.toObject());
 
         return generateApiResponse(
