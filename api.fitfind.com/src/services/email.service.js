@@ -54,23 +54,23 @@ export const sendOneSignalEmail = async ({ to, subject, text, html }) => {
  * Transporter
  */
 export const transporter = nodemailer.createTransport({
-    // service: process.env.EMAIL_SERVICE,
-    // tls: {
-    //     rejectUnauthorized: false,
-    // },
-    // auth: {
-    //     user: process.env.SMTP_EMAIL,
-    //     pass: process.env.SMTP_PASSWORD,
-    // },
-    host: process.env.SMTP_HOST,
-    port: 465,
-    secure: true,
-    // port: 587,
-    // secure: false,  
+    service: process.env.EMAIL_SERVICE,
+    tls: {
+        rejectUnauthorized: false,
+    },
     auth: {
         user: process.env.SMTP_EMAIL,
         pass: process.env.SMTP_PASSWORD,
     },
+    // host: process.env.SMTP_HOST,
+    // port: 465,
+    // secure: true,
+    // // port: 587,
+    // // secure: false,  
+    // auth: {
+    //     user: process.env.SMTP_EMAIL,
+    //     pass: process.env.SMTP_PASSWORD,
+    // },
 });
 
 export async function sendEmailOnRegistration(email, code) {
@@ -112,30 +112,30 @@ export async function sendEmailOnRegistration(email, code) {
         const companyAPI = await Config.findOne({ keyName: 'companyAPI' });
         console.log("companyAPI: ", companyAPI);
 
-        template = template.split('||COMPANYNAME||').join(companyName?.keyValue || 'fitfind');
+        template = template.split('||COMPANYNAME||').join(companyName?.keyValue || 'Fit Find');
         template = template.split('||COMPANYWEB||').join(companyWeb?.keyValue || 'www.fitfind.com');
         template = template.split('||COMPANYAPI||').join(companyAPI?.keyValue || 'api.fitfind.com');
 
         var subject = thisUser?.language == 'ar' ? `شكرًا لك على التسجيل في ${companyName?.keyValue || "بيزباي"}` : `Thank you for Registering with ${companyName?.keyValue || "fitfind"}`;
-        await sendOneSignalEmail({
-            to: email,
-            html: template,
-            subject: subject,
-        });
+        // await sendOneSignalEmail({
+        //     to: email,
+        //     html: template,
+        //     subject: subject,
+        // });
 
         // Prepare email data
-        // const mailData = {
-        //     from: process.env.FROM_EMAIL,
-        //     to: email,
-        //     bcc: email, // Use BCC for better privacy
-        //     subject: thisUser?.language == 'ar' ? `شكرًا لك على التسجيل في ${companyName?.keyValue || "بيزباي"}` : `Thank you for Registering with ${companyName?.keyValue || "fitfind"}`,
-        //     html: template,
-        //     replyTo: process.env.FROM_EMAIL,
-        // };
+        const mailData = {
+            from: process.env.FROM_EMAIL,
+            to: email,
+            bcc: email, // Use BCC for better privacy
+            subject: subject,
+            html: template,
+            replyTo: process.env.FROM_EMAIL,
+        };
 
         // // Send the email
-        // const info = await transporter.sendMail(mailData);
-        // console.log("Email sent successfully:", info);
+        const info = await transporter.sendMail(mailData);
+        console.log("Email sent successfully:", info);
     } catch (error) {
         console.error("Error in sending registration email:", error);
     }
@@ -167,32 +167,32 @@ export async function sendEmailForResetCode(email, code, name, language = 'en') 
                 const thisCompanyWeb = await Config.findOne({ keyName: 'companyWeb' });
                 const thisCompanyAPI = await Config.findOne({ keyName: 'companyAPI' });
 
-                template = template.split('||COMPANYNAME||').join(thisCompanyName?.keyValue || 'fitfind');
+                template = template.split('||COMPANYNAME||').join(thisCompanyName?.keyValue || 'Fit Find');
                 template = template.split('||COMPANYWEB||').join(thisCompanyWeb?.keyValue || 'www.fitfind.com');
                 template = template.split('||COMPANYAPI||').join(thisCompanyAPI?.keyValue || 'api.fitfind.com');
 
                 var subject = language == 'ar' ? `${code} هو الرمز الخاص بك لاستعادة كلمة المرور` : `${code} is your code to rest password`;
-                await sendOneSignalEmail({
-                    to: email,
-                    html: template,
-                    subject: subject,
-                });
+                // await sendOneSignalEmail({
+                //     to: email,
+                //     html: template,
+                //     subject: subject,
+                // });
 
                 // Mail data
-                // const mailData = {
-                //     from: process.env.FROM_EMAIL,
-                //     to: email,
-                //     bcc: email, // Use bcc to hide "to" emails from recipients
-                //     subject: language == 'ar' ? `${code} هو الرمز الخاص بك لاستعادة كلمة المرور` : `${code} is your code to rest password`,
-                //     html: template,
-                //     replyTo: process.env.FROM_EMAIL,
-                // };
+                const mailData = {
+                    from: process.env.FROM_EMAIL,
+                    to: email,
+                    bcc: email, // Use bcc to hide "to" emails from recipients
+                    subject: subject,
+                    html: template,
+                    replyTo: process.env.FROM_EMAIL,
+                };
 
-                // // Send email
-                // const info = await transporter.sendMail(mailData);
-                // console.log(" ------ info ----- ");
-                // console.log(info);
-                // console.log(" ------ info ----- ");
+                // Send email
+                const info = await transporter.sendMail(mailData);
+                console.log(" ------ info ----- ");
+                console.log(info);
+                console.log(" ------ info ----- ");
             }
         }
     } catch (error) {

@@ -10,4 +10,7 @@ const resetCodeSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Create an index to automatically delete expired reset codes
+resetCodeSchema.index({ expireAt: 1 }, { expireAfterSeconds: 0 });
+
 export default mongoose.model(ModelNames.ResetCode.model, resetCodeSchema);

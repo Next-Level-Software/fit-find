@@ -18,12 +18,23 @@ router.post(
     userController.registerUser,
 );
 router.post(
+    '/verify-account',
+    validateApiAttributes(['email', 'code']),
+    checkApiValidation,
+    userController.verifyAccount,
+);
+router.post(
     '/login',
     validateApiAttributes(['email', 'password'], 'body'),
     checkApiValidation,
     userController.loginUser,
 );
-
+router.post(
+    "/social-login",
+    validateApiAttributes(['email', 'loginType']),
+    checkApiValidation,
+    userController.socialLogin,
+);
 router.post(
     '/forgot-password',
     validateApiAttributes(['email']),
@@ -38,7 +49,7 @@ router.post(
 );
 router.patch(
     "/update-password",
-    validateApiAttributes(['_id', 'password'], 'body', ['password']),
+    validateApiAttributes(['password'], 'body', ['password']),
     checkApiValidation,
     userController.updatePassword,
 );
@@ -66,16 +77,6 @@ router.post(
     validateApiAttributes(['email'], 'body', ['email']),
     checkApiValidation,
     userController.sendResetCode,
-);
-
-router.get(
-    "/get-by-filter",
-    userController.getByFilter,
-);
-
-router.get(
-    "/get-dashboard",
-    userController.getDashboard,
 );
 
 

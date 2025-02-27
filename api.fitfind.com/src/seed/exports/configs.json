@@ -13,7 +13,7 @@
     },
     {
         "keyName": "companyName",
-        "keyValue": "fitfind",
+        "keyValue": "Fit Find",
         "keyText": null,
         "keyType": "all"
     },
@@ -41,5 +41,4 @@
         "keyText": null,
         "keyType": "all"
     }
-
 ]

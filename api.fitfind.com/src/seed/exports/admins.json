@@ -3,19 +3,19 @@
     "name": "Super Admin",
     "email": "superadmin@fitfind.com",
     "isSuperAdmin": true,
-    "password": "$2a$12$7mmw2Ft3SIZXAq.BmpOb9eSB2aIudN6QfiMjX2B2FlpAIKXuvgUU.",
+    "password": "$2a$12$GPSULKEuZmnNdbPBrT6MzOrkUN1ky.hb.Fkf9RnocZowjWNHILBri",
     "accessTabs": []
   },
   {
     "name": "Admin One",
-    "email": "admin.one@example.com",
-    "password": "$2a$12$7mmw2Ft3SIZXAq.BmpOb9eSB2aIudN6QfiMjX2B2FlpAIKXuvgUU.",
-    "profilePhoto": null, 
+    "email": "admin1@fitfind.com",
+    "password": "$2a$12$GPSULKEuZmnNdbPBrT6MzOrkUN1ky.hb.Fkf9RnocZowjWNHILBri",
+    "profilePhoto": null,
     "isSuperAdmin": true,
-    "accessTabs": ["dashboard", "users", "settings"]
+    "accessTabs": [
+      "dashboard",
+      "users",
+      "settings"
+    ]
   }
- 
 ]
-
-
-
