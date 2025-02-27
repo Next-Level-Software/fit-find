@@ -13,7 +13,7 @@
     },
     {
         "keyName": "companyName",
-        "keyValue": "fitfind",
+        "keyValue": "Fit Find",
         "keyText": null,
         "keyType": "all"
     },
@@ -40,6 +40,11 @@
         "keyValue": "1",
         "keyText": null,
         "keyType": "all"
+    },
+    {
+        "keyName": "geo-fencing-radius",
+        "keyValue": "10",
+        "keyText": "To Find nearby gyms and academies",
+        "keyType": "all"
     }
-
 ]
