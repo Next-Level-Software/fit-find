@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:fitfind/app/routes/app_pages.dart';
 import 'package:fitfind/app/widgets/custom_buttons.dart';
 import 'package:flutter/material.dart';
@@ -23,21 +25,59 @@ class WelcomeView extends GetView<WelcomeController> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Container(
-                // height: Get.height * .8,
-                width: Get.width,
-                constraints: BoxConstraints(maxHeight: Get.height * .32),
-                child:
-                    // SvgImage( ImagePaths.WELCOME_IMAGE,type:),
-                    //     SvgPicture.asset(
-                    //   ImagePaths.WELCOME_IMAGE,
-                    // )
-                    Image.asset(
-                  ImagePaths.WELCOME_IMAGE,
-                  fit: BoxFit.cover,
-                ),
+              Stack(
+                clipBehavior: Clip.none, // Ensures shadow is visible
+                children: [
+                  // Blurred Shadow Effect
+                  Positioned(
+                    left: 0,
+                    right: 0,
+                    bottom: -5, // Adjust shadow position
+                    child: ImageFiltered(
+                      imageFilter: ImageFilter.blur(
+                          sigmaX: 10, sigmaY: 10), // Blur effect
+                      child: Opacity(
+                        opacity: 0, // Adjust shadow intensity
+                        child: Image.asset(
+                          ImagePaths.WELCOME_IMAGE,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // Main Image with Bottom Fade Effect
+                  Stack(
+                    children: [
+                      Image.asset(
+                        ImagePaths.WELCOME_IMAGE,
+                        fit: BoxFit.cover,
+                      ),
+                      // White Gradient Fade Effect at Bottom
+                      Positioned.fill(
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            height: Get.height * .12,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                                colors: [
+                                  Colors.white, // Fully white at the bottom
+                                  Colors.white
+                                      .withOpacity(0.0), // Transparent fade
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              Gap(20),
+              // Gap(20),
               SvgPicture.asset(
                 ImagePaths.LOGO,
               ),
@@ -64,14 +104,24 @@ class WelcomeView extends GetView<WelcomeController> {
                           ),
                     ),
                     Gap(20),
+                    // SignInButton(
+                    //     buttonType: ButtonType.google,
+                    //     buttonSize: ButtonSize.large,
+                    //     width: Get.width,
+                        
+                    //     onPressed: () {
+                    //       print('click');
+                    //     }),
                     CustomButton(
                       onPress: () {},
                       isOutlined: true,
                       text: "Continue with google",
-                      iconPosition: IconPosition.leading,
+                      iconPosition: IconPosition.trailing,
                       borderRadius: BorderRadius.circular(12),
                       color: Colors.black,
-                      icon: FontAwesome.google_brand,
+                      // svgImage: ImagePaths.GOOGLE,
+                      // icon: FontAwesome.google_brand,
+                      
                     ),
                     Gap(20),
                     CustomButton(
@@ -84,9 +134,9 @@ class WelcomeView extends GetView<WelcomeController> {
                     Gap(20),
                     CustomButton(
                       onPress: () {},
-                        isOutlined: true,
-                        borderRadius: BorderRadius.circular(12),
-                        color: Colors.black,
+                      isOutlined: true,
+                      borderRadius: BorderRadius.circular(12),
+                      color: Colors.black,
                       text: "Log In with Phone Number",
                     ),
                     Gap(20),

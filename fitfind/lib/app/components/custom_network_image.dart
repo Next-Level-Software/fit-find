@@ -42,7 +42,7 @@ class CustomNetworkImage extends StatelessWidget {
           : CachedNetworkImage(
               imageUrl: imagePath.contains('http')
                   ? imagePath
-                  : FILE_BASE_URL + imagePath,
+                  : imagePath,
               imageBuilder: (context, imageProvider) => Container(
                 decoration: BoxDecoration(
                   color: backgroundColor,

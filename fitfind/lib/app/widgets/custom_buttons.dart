@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:svg_image/svg_image.dart';
 import '/app/constants/app_constants.dart';
 import 'package:gap/gap.dart';
 import 'package:like_button/like_button.dart';
@@ -28,6 +30,7 @@ class CustomButton extends StatelessWidget {
     this.isSmallText = false,
     this.showSkeleton = false,
     this.iconPosition = IconPosition.leading,
+    this.svgImage,
   }) {
     color ??= Get.theme.progressIndicatorTheme.color;
   }
@@ -44,6 +47,7 @@ class CustomButton extends StatelessWidget {
     this.textColor,
     this.borderRadius,
     this.borderColor,
+    this.svgImage,
     this.backgroundColor,
     this.isSmallText = false,
     this.showSkeleton = false,
@@ -65,6 +69,7 @@ class CustomButton extends StatelessWidget {
   bool? isSmallText;
   bool? showSkeleton;
   IconPosition iconPosition;
+  String? svgImage;
 
   @override
   Widget build(BuildContext context) {
@@ -155,7 +160,9 @@ class CustomButton extends StatelessWidget {
                             : textColor ?? AppColors.white,
                       )
                     : const SizedBox()
-                : const SizedBox(),
+                : (svgImage?.isNotEmpty ?? false)
+                    ? SvgPicture.asset(svgImage ?? '')
+                    : const SizedBox(),
             icon != null
                 ? isSmallText == true
                     ? const Gap(4)
@@ -178,15 +185,17 @@ class CustomButton extends StatelessWidget {
                 ),
               ),
             if (icon != null)
-              Center(
-                child: Text(
-                  text,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: isOutlined == true
-                        ? color ?? AppColors.white
-                        : textColor ?? AppColors.white,
-                    fontSize: fontSize ?? (isSmallText == true ? 14 : 18),
+              Expanded(
+                child: Center(
+                  child: Text(
+                    text,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: isOutlined == true
+                          ? color ?? AppColors.white
+                          : textColor ?? AppColors.white,
+                      fontSize: fontSize ?? (isSmallText == true ? 14 : 18),
+                    ),
                   ),
                 ),
               ),
@@ -200,20 +209,24 @@ class CustomButton extends StatelessWidget {
                             : textColor ?? AppColors.white,
                       )
                     : const SizedBox()
-                : const SizedBox(),
+                : (svgImage?.isNotEmpty ?? false)
+                    ? SvgPicture.asset(svgImage ?? '')
+                    : const SizedBox(),
           ],
         ),
       ),
     );
   }
 }
+
 class CustomElevatedButton extends StatelessWidget {
   final Function()? onPressed;
   final String? text;
   final IconData? icon;
-  final Color? color,textColor;
+  final Color? color, textColor;
 
-  CustomElevatedButton({this.onPressed, this.text, this.icon, this.color,this.textColor});
+  CustomElevatedButton(
+      {this.onPressed, this.text, this.icon, this.color, this.textColor});
 
   @override
   Widget build(BuildContext context) {
@@ -229,7 +242,9 @@ class CustomElevatedButton extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             color: color ?? Colors.transparent,
-            border: Border.all(color: AppColors.primaryOutlinedColor), // Change to your primary color
+            border: Border.all(
+                color: AppColors
+                    .primaryOutlinedColor), // Change to your primary color
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -243,7 +258,7 @@ class CustomElevatedButton extends StatelessWidget {
                 child: Text(
                   text ?? "",
                   textAlign: TextAlign.center,
-                  style: TextStyle(color:textColor?? Colors.black),
+                  style: TextStyle(color: textColor ?? Colors.black),
                 ),
               ),
             ],
@@ -253,6 +268,7 @@ class CustomElevatedButton extends StatelessWidget {
     );
   }
 }
+
 class CustomTextButton extends StatelessWidget {
   const CustomTextButton({
     super.key,
@@ -610,7 +626,7 @@ class CustomLikeButton extends StatelessWidget {
         child: LikeButton(
           padding: const EdgeInsets.only(left: 3),
           circleColor: CircleColor(
-            start: (color ?? theme.primaryColor).withOpacity(.7),
+            start: Colors.transparent,
             end: (color ?? theme.primaryColor).withOpacity(.2),
           ),
           bubblesColor: BubblesColor(

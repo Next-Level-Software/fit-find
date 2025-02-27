@@ -12,6 +12,9 @@ class ImagePaths {
   // Icons
   // static String WELCOME_IMAGE = '$svgPath/welcome_screen.svg';
   static String WELCOME_IMAGE = '$imgPath/welcome.jpg';
+  static String PLAYER = '$imgPath/player.png';
+  static String GYM = '$imgPath/gym.png';
+  static String FASHION = '$imgPath/fashion.png';
   static String CHILD = '$imgPath/child.png';
   static String MALE = '$imgPath/male.png';
   static String FEMALE = '$imgPath/female.png';
@@ -19,13 +22,26 @@ class ImagePaths {
   static String ONBOARD2= '$imgPath/onboard2.jpg';
   static String ONBOARD3= '$imgPath/onboard3.jpg';
   static String LOGO = '$svgPath/logo.svg';
+  static String LOGOUT = '$svgPath/logout.svg';
+  static String LOCK = '$svgPath/lock.svg';
+  static String FAVORITES = '$svgPath/favorites.svg';
+  static String LANGUAGE = '$svgPath/language.svg';
+  static String CALL = '$svgPath/call.svg';
+  static String ORDER = '$svgPath/order.svg';
+  static String SUBSCRIPTIONS = '$svgPath/subscriptions.svg';
+  static String PROFILE_EDIT= '$svgPath/profile_edit.svg';
+  static String EN= '$svgPath/en.svg';
+  static String AR= '$svgPath/ar.svg';
+  static String ALL_ITEMS= '$svgPath/all_items.svg';
+  static String T_SHIRT= '$svgPath/t_shirt.svg';
   static String DEALS = '$svgPath/deals.svg';
+  // static String google = '$svgPath/google.svg';
   static String HOME = '$svgPath/home.svg';
   static String LOCATION = '$svgPath/location.svg';
   static String PROFILE = '$svgPath/profile.svg';
   static String EDIT = '$svgPath/edit.svg';
   // static String EDITTIING = '$svgPath/editing.svg';
-  static String GOOGLE = '$svgPath/google.svg';
+  // static String GOOGLE = '$svgPath/google(2).svg';
   // static String HOME_NAV_ICON = '$svgPath/home_nav_icon.svg';
   // static String TRAINER_NAV_ICON = '$svgPath/traniner_nav_icon.svg';
   // static String PERFORMANCE_NAV_ICON = '$svgPath/performance_nav_icon.svg';

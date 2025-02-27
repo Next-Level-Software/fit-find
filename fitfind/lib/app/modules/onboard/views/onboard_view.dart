@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:fitfind/app/widgets/custom_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -23,30 +25,80 @@ class OnboardView extends GetView<OnboardController> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                CarouselSlider(
-                  carouselController: controller.carouselController,
-                  items: controller.imageList.map((imagePath) {
-                    return Container(
-                      width: Get.width,
-                      constraints: BoxConstraints(maxHeight: Get.height * 0.32),
-                      child: Image.asset(
-                        imagePath,
-                        fit: BoxFit.cover,
-                        width: Get.width,
+                Stack(
+                  clipBehavior: Clip.none, // Ensures shadow is visible
+                  children: [
+                    // Blurred Shadow Effect
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: -5, // Adjust shadow position
+                      child: ImageFiltered(
+                        imageFilter: ImageFilter.blur(
+                            sigmaX: 10, sigmaY: 10), // Blur effect
+                        child: Opacity(
+                          opacity: 0.0, // Adjust shadow intensity
+                          child: Image.asset(
+                            ImagePaths.WELCOME_IMAGE,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
-                    );
-                  }).toList(),
-                  options: CarouselOptions(
-                    height: Get.height * 0.32,
-                    autoPlay: false,
-                    enlargeCenterPage: true,
-                    viewportFraction: 1.0,
-                    onPageChanged: (index, reason) {
-                      controller.currentIndex = index;
-                      controller.update();
-                    },
-                  ),
+                    ),
+
+                    // Carousel Slider (Replacing Single Image)
+                    CarouselSlider(
+                      carouselController: controller.carouselController,
+                      items: controller.imageList.map((imagePath) {
+                        return Stack(
+                          children: [
+                            Image.asset(
+                              imagePath,
+                              fit: BoxFit.cover,
+                              width: Get.width,
+                              height:
+                                  Get.height * 0.32, // Ensure consistent height
+                            ),
+
+                            // White Gradient Fade Effect at Bottom
+                            Positioned.fill(
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Container(
+                                  height: Get.height *
+                                      .12, // Adjust height for fade effect
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.bottomCenter,
+                                      end: Alignment.topCenter,
+                                      colors: [
+                                        Colors
+                                            .white, // Fully white at the bottom
+                                        Colors.white.withOpacity(
+                                            0.0), // Transparent fade
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }).toList(),
+                      options: CarouselOptions(
+                        height: Get.height * 0.32,
+                        autoPlay: false,
+                        enlargeCenterPage: true,
+                        viewportFraction: 1.0,
+                        onPageChanged: (index, reason) {
+                          controller.currentIndex = index;
+                          controller.update();
+                        },
+                      ),
+                    ),
+                  ],
                 ),
+
                 Gap(20),
 
                 // Logo
@@ -62,20 +114,21 @@ class OnboardView extends GetView<OnboardController> {
                       Text(
                         'Start your workout today',
                         textAlign: TextAlign.center,
-                        style: Get.textTheme.bodyLarge,
+                        style: Get.textTheme.bodySmall,
                       ),
                       Text(
                         'Welcome to our Health & Fitness Marketplace!',
-                        style: Get.textTheme.headlineMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
+                        style: Get.textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Get.theme.primaryColor),
                         textAlign: TextAlign.center,
                       ),
                       Text(
                         'Unlock the power of personalization with our AI-driven recommendations tailored to you.',
                         textAlign: TextAlign.center,
-                        style: Get.textTheme.bodyLarge,
+                        style: Get.textTheme.bodySmall?.copyWith(),
                       ),
-
+                      Gap(10),
                       // Next Button
                     ],
                   ),
@@ -99,8 +152,9 @@ class OnboardView extends GetView<OnboardController> {
                         decoration: BoxDecoration(
                           // shape: BoxShape.circle,
                           borderRadius: controller.currentIndex == entry.key
-              ? BorderRadius.circular(20) // Capsule shape when active
-              : BorderRadius.circular(50), 
+                              ? BorderRadius.circular(
+                                  20) // Capsule shape when active
+                              : BorderRadius.circular(50),
                           color: controller.currentIndex == entry.key
                               ? Get.theme.primaryColor
                               : Colors.grey,
@@ -116,7 +170,8 @@ class OnboardView extends GetView<OnboardController> {
                   child: CustomButton(
                     text: 'Next',
                     onPress: () {
-                      controller.changeIndex((controller.currentIndex ??0)+ 1);
+                      controller
+                          .changeIndex((controller.currentIndex ?? 0) + 1);
                     },
                   ),
                 ),

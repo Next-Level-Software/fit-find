@@ -8,7 +8,6 @@ import 'package:get/get.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 import '../../../components/custom_bottombar.dart';
-import '../../../config/theme/light_theme_colors.dart';
 import '../../../constants/app_constants.dart';
 import '../../../widgets/custom_avatar.dart';
 import '../../../widgets/custom_buttons.dart';
@@ -55,8 +54,7 @@ class ProfileView extends GetView<ProfileController> {
                         height: Get.height,
                         // width: 100,
                         decoration: BoxDecoration(
-                            color: LightThemeColors
-                                .scaffoldBackgroundColorLightGey,
+                            color: Colors.white,
                             borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(30),
                                 topRight: Radius.circular(30))),

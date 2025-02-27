@@ -16,6 +16,13 @@ abstract class Routes {
   static const LOCATIONS = _Paths.LOCATIONS;
   static const MY_PROFILE = _Paths.MY_PROFILE;
   static const FORGET_PASSWORD = _Paths.FORGET_PASSWORD;
+  static const LANGUAGE = _Paths.LANGUAGE;
+  static const SUBSCRIPTIONS = _Paths.SUBSCRIPTIONS;
+  static const ORDER_HISTORY = _Paths.ORDER_HISTORY;
+  static const FAVORITE = _Paths.FAVORITE;
+  static const UPDATE_PASSWORD = _Paths.UPDATE_PASSWORD;
+  static const CONTACT_US = _Paths.CONTACT_US;
+  static const CART = _Paths.CART;
 }
 
 abstract class _Paths {
@@ -33,4 +40,11 @@ abstract class _Paths {
   static const LOCATIONS = '/locations';
   static const MY_PROFILE = '/my-profile';
   static const FORGET_PASSWORD = '/forget-password';
+  static const LANGUAGE = '/language';
+  static const SUBSCRIPTIONS = '/subscriptions';
+  static const ORDER_HISTORY = '/order-history';
+  static const FAVORITE = '/favorite';
+  static const UPDATE_PASSWORD = '/update-password';
+  static const CONTACT_US = '/contact-us';
+  static const CART = '/cart';
 }
