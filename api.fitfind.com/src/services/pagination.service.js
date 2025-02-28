@@ -40,6 +40,7 @@ async function paginationFiltrationData(
     searchAttributes = [],
     where = {},
     populate,
+    attributes,
     queryCallback = null,
     pageStart = 1
 ) {
@@ -69,6 +70,10 @@ async function paginationFiltrationData(
     // Apply populate if provided
     if (populate) {
         query = query.populate(populate);
+    }
+
+    if (attributes) {
+        query = query.select(attributes);
     }
 
     // Apply query callback for custom modifications

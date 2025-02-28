@@ -1,37 +1,65 @@
 import mongoose from "mongoose";
 import { ModelNames } from "../constants.js";
-import {
-  compareEncryptedPassword,
-  encryptPassword,
-} from "../services/password.service.js";
+
+const gymSchema = new mongoose.Schema({
+  name: { type: String },
+  nameAr: { type: String },
+  description: { type: String },
+  descriptionAr: { type: String },
+
+  price: { type: Number },
+
+  location: {
+    latitude: { type: Number },
+    longitude: { type: Number },
+    address: { type: String },
+  },
+  workingHours: [
+    {
+      day: { type: String },
+      isClosed: { type: Boolean },
+      openAt: { type: String },
+      closedAt: { type: String },
+    },
+  ],
+
+  coverImage: { type: String },
+  images: [{ type: String }],
+});
+
+const academySchema = new mongoose.Schema({
+  name: { type: String },
+  nameAr: { type: String },
+  description: { type: String },
+  descriptionAr: { type: String },
+
+  price: { type: Number },
+
+  location: {
+    latitude: { type: Number },
+    longitude: { type: Number },
+    address: { type: String },
+  },
+  workingHours: [
+    {
+      day: { type: String },
+      isClosed: { type: Boolean },
+      openAt: { type: String },
+      closedAt: { type: String },
+    },
+  ],
+
+  coverImage: { type: String },
+  images: [{ type: String }],
+  classes: [
+    { type: mongoose.Schema.Types.ObjectId, ref: ModelNames.Class.model },
+  ],
+
+});
 
 const merchantSchema = new mongoose.Schema(
   {
-    businessName: { type: String },
-    businessNameAr: { type: String },
-
-    coverImage: { type: String },
-    gymLocation: {
-      latitude: { type: Number },
-      longitude: { type: Number },
-      address: { type: String },
-    },
-    academyLocation: {
-      latitude: { type: Number },
-      longitude: { type: Number },
-      address: { type: String },
-    },
-    workingHours: [
-      {
-        day: { type: String },
-        isClosed: { type: Boolean },
-        openAt: { type: String },
-        closedAt: { type: String },
-      },
-    ],
     type: [{ type: String, enum: ["gym", "academy", "marketplace"] }],
-
-    images: [{ type: String }],
     isAvailable: { type: Boolean, default: true },
 
     status: {
@@ -42,9 +70,9 @@ const merchantSchema = new mongoose.Schema(
     declinedReason: { type: String },
 
     documents: [{ type: String }],
-    classes: [
-      { type: mongoose.Schema.Types.ObjectId, ref: ModelNames.Class.model },
-    ],
+
+    gymDetail: gymSchema,
+    academyDetail: academySchema,
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: ModelNames.User.model

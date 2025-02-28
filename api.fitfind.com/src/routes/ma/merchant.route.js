@@ -9,5 +9,15 @@ router.post(
     checkApiValidation,
     merchantController.getNearbyMerchants,
 );
+router.get(
+    '/get-gyms-by-filter',
+    merchantController.getGymByFilter,
+);
+router.get(
+    '/get-gym-detail',
+    validateApiAttributes(['id'], 'query'),
+    checkApiValidation,
+    merchantController.getGymDetail,
+);
 
 export default router;

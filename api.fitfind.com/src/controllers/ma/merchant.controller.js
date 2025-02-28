@@ -3,6 +3,7 @@ import { generateApiResponse } from "../../services/utilities.service.js";
 import { Config, Merchant } from "../../startup/models.js";
 import { asyncHandler } from '../../services/asynchandler.js';
 import geodist from "geodist";
+import { paginationFiltrationData } from '../../services/pagination.service.js';
 
 export const merchantController = {
     getNearbyMerchants: asyncHandler(async (req, res) => {
@@ -106,9 +107,49 @@ export const merchantController = {
         return generateApiResponse(
             res,
             StatusCodes.OK,
-            true,
+            filteredMerchants.length ? true : false,
             "Merchants fetched successfully",
             { merchants: filteredMerchants }
+        );
+    }),
+
+    getGymByFilter: asyncHandler(async (req, res) => {
+        const { } = req.query;
+
+        let whereStatement = {
+            type: { $in: 'gym' },
+            isAvailable: true,
+            status: 'approved',
+        };
+
+        const searchAttributes = ['businessName', 'businessNameAr', 'description', 'descriptionAr'];
+        const attributes = "-documents -academyLocation -classes -createdAt -updatedAt";
+        const populates = [
+            // { path: "user" },
+        ]
+        const filteredData = await paginationFiltrationData(Merchant, req.query, 'merchants', searchAttributes, whereStatement, populates, attributes);
+
+        return generateApiResponse(
+            res, StatusCodes.OK, true,
+            "Merchants by filter fetched successfully!",
+            { filteredData },
+        );
+    }),
+
+    getGymDetail: asyncHandler(async (req, res) => {
+        const { id } = req.query;
+
+        const merchant = await Merchant.findById(id)
+            .select("-documents -academyLocation -classes -createdAt -updatedAt");
+
+        if (!merchant) {
+            return generateApiResponse(res, StatusCodes.NOT_FOUND, false, "Merchant not found");
+        }
+
+        return generateApiResponse(
+            res, StatusCodes.OK, true,
+            "Merchant fetched successfully",
+            { merchant },
         );
     }),
 }
