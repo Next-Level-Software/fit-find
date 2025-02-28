@@ -8,7 +8,7 @@ import {
 
 router.post(
   "/register",
-  validateApiAttributes(["businessName", "type"]),
+  validateApiAttributes(["type"]),
   checkApiValidation,
   merchantController.register,
 );

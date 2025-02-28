@@ -19,5 +19,11 @@ router.get(
     checkApiValidation,
     merchantController.getGymDetail,
 );
+router.patch(
+    "/favorite-unfavorite",
+    validateApiAttributes(['id', 'isFavorite']),
+    checkApiValidation,
+    merchantController.favoriteUnfavoriteMerchant,
+)
 
 export default router;

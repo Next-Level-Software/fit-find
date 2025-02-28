@@ -23,6 +23,19 @@ const userSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: ModelNames.Merchant.model,
         },
+
+        favoriteMerchants: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: ModelNames.Merchant.model,
+            },
+        ],
+        favoriteProducts: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: ModelNames.Merchant.model,
+            },
+        ],
     },
     { timestamps: true }
 );

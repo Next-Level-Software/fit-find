@@ -5,17 +5,18 @@ const reviewSchema = new mongoose.Schema(
     {
         rating: { type: Number, required: true },
         user: { type: mongoose.Schema.Types.ObjectId, ref: ModelNames.User.model },
-        product: { type: mongoose.Schema.Types.ObjectId, ref: ModelNames.Product.model },
         feedback: { type: String },
-        type: { type: String, enum: ["service", "product"] },
-        product: { type: mongoose.Schema.Types.ObjectId, ref: ModelNames.Product.model },
+
+        type: { type: String, enum: ["gym", "academy", "product"] },
         replyAt: { type: Date },
         replyMessage: { type: String },
         isReplied: { type: Boolean, default: false },
-        merchant: { type: mongoose.Schema.Types.ObjectId, ref: ModelNames.Merchant.model },
         flag: { type: Boolean, default: false },
         isDeleted: { type: Boolean, default: false },
         deleteReason: { type: String },
+
+        product: { type: mongoose.Schema.Types.ObjectId, ref: ModelNames.Product.model },
+        merchant: { type: mongoose.Schema.Types.ObjectId, ref: ModelNames.Merchant.model },
     },
     { timestamps: true }
 );

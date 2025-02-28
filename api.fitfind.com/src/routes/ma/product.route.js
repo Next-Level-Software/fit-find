@@ -11,5 +11,13 @@ router.get(
     '/get-detail',
     productController.getProductDetail,
 );
+router.patch(
+    "/favorite-unfavorite",
+    productController.favoriteUnfavoriteProduct,
+);
+router.get(
+    "/get-favorite-products",
+    productController.getFavoriteProducts,
+);
 
 export default router;

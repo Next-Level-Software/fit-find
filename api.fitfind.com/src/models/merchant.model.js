@@ -25,6 +25,8 @@ const gymSchema = new mongoose.Schema({
 
   coverImage: { type: String },
   images: [{ type: String }],
+  rating: { type: Number, default: 0 },
+  ratingCount: { type: Number, default: 0 },
 });
 
 const academySchema = new mongoose.Schema({
@@ -55,6 +57,8 @@ const academySchema = new mongoose.Schema({
     { type: mongoose.Schema.Types.ObjectId, ref: ModelNames.Class.model },
   ],
 
+  rating: { type: Number, default: 0 },
+  ratingCount: { type: Number, default: 0 },
 });
 
 const merchantSchema = new mongoose.Schema(

@@ -10,12 +10,9 @@ export const merchantController = {
         const { _id: user, role } = req.user;
 
         const {
-            businessName,
-            businessNameAr,
-            gymLocation,
-            academyLocation,
-            workingHours,
             type,
+            gymDetail,
+            academyDetail,
             documents,
         } = req.body;
 
@@ -31,12 +28,9 @@ export const merchantController = {
         }
 
         const createdMerchant = await Merchant.create({
-            businessName,
-            businessNameAr,
-            gymLocation,
-            academyLocation,
-            workingHours,
             type,
+            gymDetail,
+            academyDetail,
             documents,
             user: user,
         });
